@@ -63,6 +63,7 @@ class SignUpScreen : AppCompatActivity() {
             editor.putString("password", password)
             editor.putString("name", name)
             editor.putString("surname", surname)
+            editor.remove("imagePath")
             editor.apply()
 
             Toast.makeText(this, "Вы успешно зарегистрировались.", Toast.LENGTH_SHORT).show()

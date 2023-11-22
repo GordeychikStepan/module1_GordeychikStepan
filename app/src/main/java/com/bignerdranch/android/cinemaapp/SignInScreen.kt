@@ -49,6 +49,7 @@ class SignInScreen : AppCompatActivity() {
                 if (email == savedEmail && password == savedPassword) {
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
+                    finish()
                 } else {
                     Toast.makeText(this, "Неверный email или пароль", Toast.LENGTH_SHORT).show()
                 }

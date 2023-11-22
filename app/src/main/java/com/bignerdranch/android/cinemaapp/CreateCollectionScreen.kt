@@ -20,7 +20,7 @@ class CreateCollectionScreen : AppCompatActivity() {
         val backButton = findViewById<ImageView>(R.id.backImage)
         backButton.setOnClickListener {
             setResult(RESULT_CANCELED)
-            finish()
+            finishWithAnimation()
         }
 
         val selectIconButton = findViewById<Button>(R.id.selectIconButton)
@@ -51,6 +51,11 @@ class CreateCollectionScreen : AppCompatActivity() {
             }
             finish()
         }
+    }
+
+    private fun finishWithAnimation() {
+        finish()
+        overridePendingTransition(R.anim.slide_out_right, R.anim.fade_out)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

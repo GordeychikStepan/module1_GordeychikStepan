@@ -1,6 +1,7 @@
 package com.bignerdranch.android.cinemaapp
 
 import android.app.Activity.RESULT_OK
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -52,7 +53,12 @@ class NavigationCollectionsFragment : Fragment(), CollectionAdapter.OnCollection
                     R.id.menu_add -> {
                         // запуск активности CreateCollectionScreen для создания новой коллекции
                         val intent = Intent(requireContext(), CreateCollectionScreen::class.java)
-                        startActivityForResult(intent, REQUEST_CREATE_COLLECTION)
+                        val options = ActivityOptions.makeCustomAnimation(
+                            requireContext(),
+                            R.anim.slide_in_right,
+                            R.anim.fade_out
+                        )
+                        startActivityForResult(intent, REQUEST_CREATE_COLLECTION, options.toBundle())
                         true
                     }
                     else -> false

@@ -55,7 +55,7 @@
         app:layout_constraintTop_toBottomOf="@+id/selectedIconImageView" />
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/discussionsLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="40dp"
@@ -79,18 +79,6 @@
             android:textSize="17sp"
             android:textStyle="bold" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="end" />
-
-        <ImageView
-            android:layout_width="55dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/arrow" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -98,7 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintTop_toBottomOf="@+id/discussionsLinearLayout">
 
         <ImageView
             android:layout_width="24dp"
@@ -116,18 +104,6 @@
             android:textColor="@color/white"
             android:textSize="17sp"
             android:textStyle="bold" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <ImageView
-            android:layout_width="55dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="-3dp"
-            android:src="@drawable/arrow" />
 
     </LinearLayout>
 
@@ -155,22 +131,11 @@
             android:textSize="17sp"
             android:textStyle="bold" />
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <ImageView
-            android:layout_width="55dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="-3dp"
-            android:src="@drawable/arrow" />
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/selectIconButton"
+        android:id="@+id/exitButton"
         android:layout_width="375dp"
         android:layout_height="49dp"
         android:layout_marginBottom="24dp"

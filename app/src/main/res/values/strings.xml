@@ -30,4 +30,6 @@
     <string name="settings">Настройки</string>
     <string name="exit">Выход</string>
     <string name="profile">Профиль</string>
+    <string name="discussions">Обсуждения</string>
+    <string name="center_point">•</string>
 </resources>

@@ -1,8 +1,10 @@
 package com.bignerdranch.android.cinemaapp
 
+import java.util.*
+
 data class MessageModel(
     val text: String,
-    val timestamp: Long,
+    val date: String,
     val isSentByMe: Boolean,
     val userName: String,
     val profilePhoto: Int

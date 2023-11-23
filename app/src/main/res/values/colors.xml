@@ -11,4 +11,8 @@
     <color name="light_grey">#A8A8A8</color>
     <color name="grey">#757575</color>
     <color name="blue_buttons">#2B70A8</color>
+    <color name="message_send">#2E2B2A</color>
+    <color name="message_send_disk">#FAE8D8</color>
+    <color name="message_received_disk">#969594</color>
+    <color name="grey_line">#484848</color>
 </resources>

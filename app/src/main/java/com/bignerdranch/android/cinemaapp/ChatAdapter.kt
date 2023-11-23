@@ -25,12 +25,9 @@ class ChatAdapter (private val chatList: List<ChatModel>) :
     }
 
     inner class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val userNameTextView: TextView = itemView.findViewById(R.id.userNameTextView)
         private val messagesRecyclerView: RecyclerView = itemView.findViewById(R.id.messagesRecyclerView)
 
         fun bind(chat: ChatModel) {
-            userNameTextView.text = chat.userName
-
             val layoutManager = LinearLayoutManager(itemView.context)
             messagesRecyclerView.layoutManager = layoutManager
             messagesRecyclerView.adapter = MessageAdapter(chat.messages)

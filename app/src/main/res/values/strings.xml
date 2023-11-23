@@ -32,4 +32,5 @@
     <string name="profile">Профиль</string>
     <string name="discussions">Обсуждения</string>
     <string name="center_point">•</string>
+    <string name="write_message">Напишите сообщение...</string>
 </resources>

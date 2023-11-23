@@ -9,17 +9,24 @@ import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MessageAdapter (private val messageList: List<MessageModel>) :
+class MessageAdapter(private val messageList: List<MessageModel>) :
     RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-        val layoutRes = if (viewType == SENT_BY_ME) R.layout.item_message_sent else R.layout.item_message_received
+        val layoutRes = when (viewType) {
+            NORMAL_RECEIVED -> R.layout.item_message_received
+            LAST_RECEIVED -> R.layout.item_message_received_last
+            NORMAL_SENT -> R.layout.item_message_sent
+            LAST_SENT -> R.layout.item_message_sent_last
+            else -> throw IllegalArgumentException("Invalid view type")
+        }
         val view = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
         return MessageViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
         val message = messageList[position]
+        val viewType = getItemViewType(position)
         holder.bind(message)
     }
 
@@ -28,7 +35,26 @@ class MessageAdapter (private val messageList: List<MessageModel>) :
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (messageList[position].isSentByMe) SENT_BY_ME else RECEIVED
+        val current = messageList[position]
+        val previous = if (position > 0) messageList[position - 1] else null
+        val next = if (position < messageList.size - 1) messageList[position + 1] else null
+
+        return when {
+            current.isSentByMe -> {
+                if (previous == null || current.userName != previous.userName) {
+                    NORMAL_SENT
+                } else {
+                    LAST_SENT
+                }
+            }
+            else -> {
+                if (previous == null || current.userName != previous.userName) {
+                    NORMAL_RECEIVED
+                } else {
+                    LAST_RECEIVED
+                }
+            }
+        }
     }
 
     inner class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -39,14 +65,17 @@ class MessageAdapter (private val messageList: List<MessageModel>) :
 
         fun bind(message: MessageModel) {
             messageTextView.text = message.text
-            timestampTextView.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(message.timestamp))
+            val formattedTimestamp = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+            timestampTextView.text = formattedTimestamp
             profileImageView.setImageResource(message.profilePhoto)
             userNameTextView.text = message.userName
         }
     }
 
     companion object {
-        const val SENT_BY_ME = 1
-        const val RECEIVED = 2
+        const val NORMAL_RECEIVED = 1
+        const val LAST_RECEIVED = 2
+        const val NORMAL_SENT = 3
+        const val LAST_SENT = 4
     }
 }

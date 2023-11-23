@@ -1,6 +1,18 @@
 package com.bignerdranch.android.cinemaapp
 
 data class ChatModel(
-    val userName: String,
+    val chatNumber: Int,
+    val chatName: String,
+    val imageResId: Int, // Изображение чата
     val messages: MutableList<MessageModel>
-)
+) {
+    fun getLastMessageTextWithSender(): String {
+        val lastMessage = messages.lastOrNull()
+        return if (lastMessage != null) {
+            "${lastMessage.userName}: ${lastMessage.text}"
+        } else {
+            ""
+        }
+    }
+}
+

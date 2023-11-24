@@ -16,7 +16,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="50dp"
         android:background="@drawable/message_received_lasts"
         android:padding="8dp"
         android:minWidth="160dp"
@@ -26,7 +27,6 @@
             android:id="@+id/messageTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxWidth="264dp"
             android:textSize="16sp"
             android:textColor="@android:color/white"
             android:paddingTop="6dp"

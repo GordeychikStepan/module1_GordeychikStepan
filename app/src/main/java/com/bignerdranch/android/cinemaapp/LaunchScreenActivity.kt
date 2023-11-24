@@ -8,15 +8,15 @@ import androidx.appcompat.app.AppCompatActivity
 
 // загрузочный экран
 @SuppressLint("CustomSplashScreen")
-class SplashActivity : AppCompatActivity() {
-    private val SPLASH_DELAY: Long = 2000
+class LaunchScreenActivity : AppCompatActivity() {
+    private val splashDelay: Long = 2000
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
+        setContentView(R.layout.activity_launch_screen)
         Handler().postDelayed({
-            val intent = Intent(this@SplashActivity, SignInScreen::class.java)
+            val intent = Intent(this@LaunchScreenActivity, SignInScreen::class.java)
             startActivity(intent)
             finish()
-        }, SPLASH_DELAY)
+        }, splashDelay)
     }
 }

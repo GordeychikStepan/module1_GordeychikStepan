@@ -15,6 +15,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import java.io.FileOutputStream
 
 class NavigationProfileScreenFragment : Fragment() {
 
@@ -26,7 +27,6 @@ class NavigationProfileScreenFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.activity_profile_screen, container, false)
 
-        // инициализация SharedPreferences
         sharedPreferences = requireActivity().getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
 
         val email = sharedPreferences.getString("email", "")
@@ -87,9 +87,34 @@ class NavigationProfileScreenFragment : Fragment() {
             val selectedImageUri: Uri? = data.data
             selectedIconImageView.setImageURI(selectedImageUri)
 
-            val editor = sharedPreferences.edit()
-            editor.putString("imagePath", selectedImageUri.toString())
-            editor.apply()
+            // Используйте content resolver для открытия входного потока
+            selectedImageUri?.let { uri ->
+                val contentResolver = requireContext().contentResolver
+                val inputStream = contentResolver.openInputStream(uri)
+
+                // Создайте временный файл
+                val tempFile = createTempFile("tempImage", null, requireContext().cacheDir)
+                tempFile.deleteOnExit()
+
+                // Используйте буфер для копирования контента во временный файл
+                inputStream?.use { input ->
+                    FileOutputStream(tempFile).use { output ->
+                        val buffer = ByteArray(4 * 1024) // размер буфера
+                        while (true) {
+                            val byteCount = input.read(buffer)
+                            if (byteCount < 0) break
+                            output.write(buffer, 0, byteCount)
+                        }
+                        output.flush()
+                    }
+                }
+
+                // Сохраните путь временного файла в SharedPreferences
+                val editor = sharedPreferences.edit()
+                editor.putString("imagePath", tempFile.absolutePath)
+                editor.apply()
+            }
         }
     }
+
 }

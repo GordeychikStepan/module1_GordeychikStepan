@@ -1,14 +1,14 @@
 package com.bignerdranch.android.cinemaapp
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.DisplayMetrics
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,29 +17,42 @@ import java.util.*
 
 class ChatScreen : AppCompatActivity() {
 
+    private lateinit var sharedPreferences: SharedPreferences
+    private val sharedPrefFile = "com.example.sharedPrefFile"
+    private var selectedImageUri: Uri? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_screen)
 
-        // Получить chatNumber из Intent
+        sharedPreferences = this.getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
+        val name = sharedPreferences.getString("name", "")
+        val surname = sharedPreferences.getString("surname", "")
+
+        // Проверяем наличие сохранённого пути к изображению в SharedPreferences
+        val imagePath = sharedPreferences.getString("imagePath", null)
+        if (!imagePath.isNullOrEmpty()) {
+            selectedImageUri = Uri.parse(imagePath)
+            //selectedIconImageView.setImageURI(selectedImageUri)
+        }
+
         val chatNumber = intent.getIntExtra("chatNumber", -1)
 
-        // Если chatNumber не был передан, завершить активность
         if (chatNumber == -1) {
             finish()
             return
         }
 
         val chatList = mutableListOf<ChatModel>()
-        val chatModel = MessagesData.getChatByNumber(chatNumber)
+        val chatModel = MessagesData.getChatByNumber(chatNumber, name, surname)
         chatList.add(chatModel)
 
         val chatRecyclerView: RecyclerView = findViewById(R.id.chatRecyclerView)
         val messageEditText: EditText = findViewById(R.id.messageEditText)
         val sendButton: Button = findViewById(R.id.sendButton)
         val chatTitleTextView: TextView = findViewById(R.id.chatTitleTextView)
+        val backButton: ImageView = findViewById(R.id.backImage)
 
-        // Установка названия чата в TextView
         chatTitleTextView.text = chatModel.chatName
 
         val layoutManager = LinearLayoutManager(this)
@@ -52,17 +65,21 @@ class ChatScreen : AppCompatActivity() {
             if (messageText.isNotEmpty()) {
                 // Добавить новое сообщение в чат
                 val currentDate = getCurrentTimeString()
-                val newMessage = MessageModel(messageText, currentDate, true, "Ваше имя", R.drawable.user_profile)
+                val newMessage = MessageModel(messageText, currentDate, true, "$name $surname", R.drawable.user_profile)
                 chatModel.messages.add(newMessage)
-                chatAdapter.notifyItemChanged(0) // Обновить адаптер
-                messageEditText.text.clear() // Очистить поле ввода
+                chatAdapter.notifyItemChanged(0)
+                messageEditText.text.clear()
 
-                // Скрыть клавиатуру
                 val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(messageEditText.windowToken, 0)
 
                 chatRecyclerView.smoothScrollToPosition(chatModel.messages.size - 1)
             }
+        }
+
+        backButton.setOnClickListener {
+            finish()
+            overridePendingTransition(R.anim.slide_out_right, R.anim.fade_out)
         }
     }
 

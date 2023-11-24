@@ -7,5 +7,6 @@ data class MessageModel(
     val date: String,
     val isSentByMe: Boolean,
     val userName: String,
-    val profilePhoto: Int
+    val profilePhoto: Int,
+    val isDateMessage: Boolean = false
 )

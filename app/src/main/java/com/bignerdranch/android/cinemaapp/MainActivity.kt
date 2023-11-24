@@ -12,9 +12,6 @@ import com.bignerdranch.android.cinemaapp.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    companion object {
-        const val REQUEST_CODE_STORAGE_PERMISSION = 1
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,14 +57,11 @@ class MainActivity : AppCompatActivity() {
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             // Разрешение не предоставлено
-            // Здесь вы можете запросить разрешение у пользователя
             ActivityCompat.requestPermissions(
-                this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                REQUEST_CODE_STORAGE_PERMISSION
+                this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1
             )
         } else {
             // Разрешение уже предоставлено
-            // Здесь вы можете выполнять действия, которые требуют разрешения
         }
     }
 

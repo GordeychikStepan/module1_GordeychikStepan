@@ -8,38 +8,35 @@
     tools:context=".NavigationCollections"
     android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="80dp"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
+            android:id="@+id/textView"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="41dp"
+            android:layout_weight="1"
             android:text="@string/title_collection"
             android:textColor="@color/white"
-            android:textSize="23sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.25"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="70dp"
+            android:textSize="23sp" />
 
         <Button
             android:id="@+id/createCollectionButton"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:layout_marginTop="49dp"
-            android:layout_marginEnd="30dp"
-            android:background="@drawable/plus"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginTop="13dp"
+            android:layout_marginEnd="35dp"
+            android:layout_gravity="center"
+            android:background="@drawable/plus" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/collectionsRecyclerView"

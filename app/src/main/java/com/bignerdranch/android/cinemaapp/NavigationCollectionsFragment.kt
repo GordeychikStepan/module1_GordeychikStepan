@@ -40,7 +40,7 @@ class NavigationCollectionsFragment : Fragment(), CollectionAdapter.OnCollection
         val layoutManager = LinearLayoutManager(requireContext())
         recyclerView.layoutManager = layoutManager
 
-        // Загрузка коллекций из Shared Preferences
+        // загрузка коллекций из Shared Preferences
         collections.addAll(sharedPrefsHelper.loadCollections())
         collectionAdapter.notifyDataSetChanged()
 
@@ -58,7 +58,7 @@ class NavigationCollectionsFragment : Fragment(), CollectionAdapter.OnCollection
                             R.anim.slide_in_right,
                             R.anim.fade_out
                         )
-                        startActivityForResult(intent, REQUEST_CREATE_COLLECTION, options.toBundle())
+                        startActivityForResult(intent, 1, options.toBundle())
                         true
                     }
                     else -> false
@@ -73,7 +73,7 @@ class NavigationCollectionsFragment : Fragment(), CollectionAdapter.OnCollection
     // обработка результата возвращаемого из активности
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CREATE_COLLECTION && resultCode == RESULT_OK) {
+        if (requestCode == 1 && resultCode == RESULT_OK) {
             val name = data?.getStringExtra(CreateCollectionScreen.EXTRA_COLLECTION_NAME)
             val iconId = data?.getIntExtra(CreateCollectionScreen.EXTRA_SELECTED_ICON, R.drawable.ico1)
             if (name != null && iconId != null) {
@@ -90,10 +90,5 @@ class NavigationCollectionsFragment : Fragment(), CollectionAdapter.OnCollection
         collections.remove(collection)
         collectionAdapter.notifyDataSetChanged()
         sharedPrefsHelper.saveCollections(collections)
-    }
-
-    // код запроса для создания коллекции
-    companion object {
-        private const val REQUEST_CREATE_COLLECTION = 1
     }
 }

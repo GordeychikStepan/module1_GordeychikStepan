@@ -1,7 +1,5 @@
 package com.bignerdranch.android.cinemaapp
 
-import android.content.SharedPreferences
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +12,6 @@ import java.util.*
 class MessageAdapter(
     private val messageList: List<MessageModel>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private var selectedImageUri: Uri? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -99,11 +95,16 @@ class MessageAdapter(
             timestampTextView.text = formattedTimestamp
             userNameTextView.text = message.userName
 
-
-
             val isLastFromUser = layoutPosition == messageList.lastIndex || message.userName != messageList[layoutPosition + 1].userName
-            if (isLastFromUser) profileImageView.setImageResource(message.profilePhoto)
-            else profileImageView.setImageResource(R.color.background)
+            if (isLastFromUser) {
+                if (message.profilePhoto != null) {
+                    profileImageView.setImageURI(message.profilePhoto)
+                } else {
+                    profileImageView.setImageResource(R.drawable.user_profile)
+                }
+            } else {
+                profileImageView.setImageResource(R.color.background)
+            }
         }
     }
 
@@ -120,10 +121,8 @@ class MessageAdapter(
         val previous = if (position > 0) messageList[position - 1] else null
 
         return if (previous != null && current.userName == previous.userName) {
-            // Возвращаем нулевой отступ для последнего сообщения от того же пользователя
             holder.itemView.context.resources.getDimensionPixelSize(R.dimen.message_margin_base)
         } else {
-            // Возвращаем отступ перед первым сообщением от другого пользователя или перед своим сообщением
             holder.itemView.context.resources.getDimensionPixelSize(R.dimen.message_margin)
         }
     }

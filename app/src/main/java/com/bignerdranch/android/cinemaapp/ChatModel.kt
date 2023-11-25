@@ -9,10 +9,15 @@ data class ChatModel(
     fun getLastMessageTextWithSender(): String {
         val lastMessage = messages.lastOrNull()
         return if (lastMessage != null) {
-            "${lastMessage.userName}: ${lastMessage.text}"
+            val firstName = extractFirstName(lastMessage.userName)
+            "$firstName: ${lastMessage.text}"
         } else {
             ""
         }
+    }
+
+    private fun extractFirstName(fullName: String): String {
+        return fullName.split(" ")[0]
     }
 }
 

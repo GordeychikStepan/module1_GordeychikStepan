@@ -34,5 +34,6 @@
     <string name="center_point">•</string>
     <string name="write_message">Напишите сообщение...</string>
     <string name="title_set_for">Подборка - %1$s %2$d года:</string>
+    <string name="to_change">Изменить</string>
 
 </resources>

@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -19,7 +20,6 @@ class ChatScreen : AppCompatActivity() {
 
     private lateinit var sharedPreferences: SharedPreferences
     private val sharedPrefFile = "com.example.sharedPrefFile"
-    private var selectedImageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,13 +29,6 @@ class ChatScreen : AppCompatActivity() {
         val name = sharedPreferences.getString("name", "")
         val surname = sharedPreferences.getString("surname", "")
 
-        // Проверяем наличие сохранённого пути к изображению в SharedPreferences
-        val imagePath = sharedPreferences.getString("imagePath", null)
-        if (!imagePath.isNullOrEmpty()) {
-            selectedImageUri = Uri.parse(imagePath)
-            //selectedIconImageView.setImageURI(selectedImageUri)
-        }
-
         val chatNumber = intent.getIntExtra("chatNumber", -1)
 
         if (chatNumber == -1) {
@@ -44,7 +37,7 @@ class ChatScreen : AppCompatActivity() {
         }
 
         val chatList = mutableListOf<ChatModel>()
-        val chatModel = MessagesData.getChatByNumber(chatNumber, name, surname)
+        val chatModel = MessagesData.getChatByNumber(chatNumber, name, surname, this)
         chatList.add(chatModel)
 
         val chatRecyclerView: RecyclerView = findViewById(R.id.chatRecyclerView)
@@ -63,9 +56,21 @@ class ChatScreen : AppCompatActivity() {
         sendButton.setOnClickListener {
             val messageText = messageEditText.text.toString()
             if (messageText.isNotEmpty()) {
-                // Добавить новое сообщение в чат
+
                 val currentDate = getCurrentTimeString()
-                val newMessage = MessageModel(messageText, currentDate, true, "$name $surname", R.drawable.user_profile)
+
+                val imagePath = sharedPreferences.getString("imagePath", null)
+                Log.d("ImagePath", "Path: $imagePath")
+
+                val newMessage = MessageModel(messageText, currentDate, true, "$name $surname", null)
+
+                if (!imagePath.isNullOrEmpty()) {
+                    newMessage.profilePhoto = Uri.parse(imagePath)
+                } else {
+                    val packageName = "com.bignerdranch.android.cinemaapp"
+                    newMessage.profilePhoto = Uri.parse("android.resource://$packageName/${R.drawable.user_profile}")
+                }
+
                 chatModel.messages.add(newMessage)
                 chatAdapter.notifyItemChanged(0)
                 messageEditText.text.clear()
@@ -76,6 +81,7 @@ class ChatScreen : AppCompatActivity() {
                 chatRecyclerView.smoothScrollToPosition(chatModel.messages.size - 1)
             }
         }
+
 
         backButton.setOnClickListener {
             finish()

@@ -1,5 +1,6 @@
 package com.bignerdranch.android.cinemaapp
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityOptions
 import android.content.Context
@@ -15,6 +16,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import java.io.FileOutputStream
 
 class NavigationProfileScreenFragment : Fragment() {
@@ -24,6 +26,7 @@ class NavigationProfileScreenFragment : Fragment() {
     private lateinit var selectedIconImageView: ImageView
     private var selectedImageUri: Uri? = null
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.activity_profile_screen, container, false)
 
@@ -87,16 +90,16 @@ class NavigationProfileScreenFragment : Fragment() {
             val selectedImageUri: Uri? = data.data
             selectedIconImageView.setImageURI(selectedImageUri)
 
-            // Используйте content resolver для открытия входного потока
+            // content resolver для открытия входного потока
             selectedImageUri?.let { uri ->
                 val contentResolver = requireContext().contentResolver
                 val inputStream = contentResolver.openInputStream(uri)
 
-                // Создайте временный файл
+                // создание временного файла
                 val tempFile = createTempFile("tempImage", null, requireContext().cacheDir)
                 tempFile.deleteOnExit()
 
-                // Используйте буфер для копирования контента во временный файл
+                // использование буфера для копирования контента во временный файл
                 inputStream?.use { input ->
                     FileOutputStream(tempFile).use { output ->
                         val buffer = ByteArray(4 * 1024) // размер буфера
@@ -109,10 +112,14 @@ class NavigationProfileScreenFragment : Fragment() {
                     }
                 }
 
-                // Сохраните путь временного файла в SharedPreferences
+                // сохранение пути временного файла в SharedPreferences
                 val editor = sharedPreferences.edit()
                 editor.putString("imagePath", tempFile.absolutePath)
                 editor.apply()
+
+                Glide.with(this)
+                    .load(tempFile)
+                    .into(selectedIconImageView)
             }
         }
     }

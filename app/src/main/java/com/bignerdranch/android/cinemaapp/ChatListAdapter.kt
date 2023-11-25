@@ -1,5 +1,9 @@
 package com.bignerdranch.android.cinemaapp
 
+import android.graphics.Color
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,10 +42,33 @@ class ChatListAdapter(private val chatList: List<ChatModel>) :
         }
 
         fun bind(chatModel: ChatModel) {
-            // Здесь устанавливайте данные в соответствии с вашим макетом
             chatImageView.setImageResource(chatModel.imageResId)
             chatNameTextView.text = chatModel.chatName
-            lastMessageTextView.text = chatModel.getLastMessageTextWithSender()
+
+            // создаем SpannableString
+            val lastMessage = chatModel.getLastMessageTextWithSender()
+            val spannableString = SpannableString(lastMessage)
+
+            // определяем позицию "имя:" в строке
+            val colonIndex = lastMessage.indexOf(':')
+
+            // устанавливаем серый цвет для имени
+            spannableString.setSpan(
+                ForegroundColorSpan(Color.parseColor("#AFAFAF")),
+                0,
+                colonIndex + 1, // +1, чтобы включить ":" в область
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+
+            // устанавливаем белый цвет для остальной части сообщения
+            spannableString.setSpan(
+                ForegroundColorSpan(Color.WHITE),
+                colonIndex + 1,
+                lastMessage.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+
+            lastMessageTextView.text = spannableString
         }
     }
 

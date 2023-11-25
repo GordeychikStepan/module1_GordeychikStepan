@@ -3,4 +3,5 @@
     <item
         android:id="@+id/menu_del"
         android:title="@string/delete_film" />
+
 </menu>

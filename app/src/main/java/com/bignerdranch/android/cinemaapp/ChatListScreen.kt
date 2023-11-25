@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class ChatListScreen : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_list_screen)
 
@@ -19,7 +21,7 @@ class ChatListScreen : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this)
         chatListRecyclerView.layoutManager = layoutManager
 
-        val chatList = MessagesData.getAllChats("", "")
+        val chatList = MessagesData.getAllChats("", "", this)
 
         val chatListAdapter = ChatListAdapter(chatList)
         chatListRecyclerView.adapter = chatListAdapter

@@ -1,6 +1,7 @@
 package com.bignerdranch.android.cinemaapp
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -13,12 +14,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        checkPermission()
+        //checkPermission()
 
         // переключение м/у экранами навигации
         binding.navView.setOnNavigationItemSelectedListener { menuItem ->
@@ -50,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         switchFragment(NavigationHomeFragment())
     }
 
-    private fun checkPermission() {
+    /*private fun checkPermission() {
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.READ_EXTERNAL_STORAGE
@@ -63,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             // Разрешение уже предоставлено
         }
-    }
+    }*/
 
     private fun switchFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()

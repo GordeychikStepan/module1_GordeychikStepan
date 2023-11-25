@@ -10,8 +10,6 @@ import android.widget.ImageView
 // окно для создания новой коллекции
 class CreateCollectionScreen : AppCompatActivity() {
 
-    private val collections = mutableListOf<Collection>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.create_collection_screen)

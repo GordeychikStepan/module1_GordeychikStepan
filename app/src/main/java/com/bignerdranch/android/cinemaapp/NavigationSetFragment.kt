@@ -32,21 +32,21 @@ class NavigationSetFragment : Fragment() {
         val titleTextView = view.findViewById<TextView>(R.id.textView2)
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.MONTH, 1)
-        val month = SimpleDateFormat("LLLL", Locale.getDefault()).format(calendar.time)
+        val month = SimpleDateFormat("LLLL", Locale("ru", "RU")).format(calendar.time)
         val year1 = calendar.get(Calendar.YEAR)
         val titleText = getString(R.string.title_set_for, month, year1)
         titleTextView.text = titleText
 
-        // Инициализация Retrofit
+        // инициализация Retrofit
         val retrofit = Retrofit.Builder()
             .baseUrl("https://kinopoiskapiunofficial.tech/api/v2.2/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        // Создание экземпляра MovieApiService
+        // создание экземпляра MovieApiService
         movieApiService = retrofit.create(MovieApiService::class.java)
 
-        // Запрос на получение кинопремьер на следующий месяц
+        // запрос на получение кинопремьер на следующий месяц
         val nextMonth = getNextMonth()
         val year = Calendar.getInstance().get(Calendar.YEAR)
         val call = movieApiService.getPremieres(year, nextMonth, apiKey)
@@ -76,11 +76,13 @@ class NavigationSetFragment : Fragment() {
     private fun getNextMonth(): String {
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.MONTH, 1)
-        return SimpleDateFormat("MMMM", Locale.getDefault()).format(calendar.time).toUpperCase(Locale.getDefault())
+
+        val month = SimpleDateFormat("MMMM", Locale.ENGLISH).format(calendar.time)
+        return month.toUpperCase(Locale.ENGLISH)
     }
 
     private fun handleApiResponse(response: Response<PremieresResponse>) {
-        // Проверка, привязан ли фрагмент к контексту
+        // проверка, привязан ли фрагмент к контексту
         if (!isAdded) {
             return
         }
@@ -99,7 +101,7 @@ class NavigationSetFragment : Fragment() {
     }
 
     private fun handleApiFailure(t: Throwable) {
-        // Проверка, привязан ли фрагмент к контексту
+        // проверка, привязан ли фрагмент к контексту
         if (!isAdded) {
             return
         }

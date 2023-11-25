@@ -8,7 +8,7 @@ class SharedPrefsHelper(context: Context) {
     private val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
     private val gson = Gson()
 
-    // cохранение коллекции в SharedPreferences
+    // сохранение коллекции в SharedPreferences
     fun saveCollections(collections: List<Collection>) {
         val json = gson.toJson(collections)
         sharedPreferences.edit().putString("collections", json).apply()

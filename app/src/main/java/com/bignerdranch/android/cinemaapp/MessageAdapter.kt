@@ -6,11 +6,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MessageAdapter(
-    private val messageList: List<MessageModel>) :
+    var messageList: List<MessageModel>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -81,7 +83,6 @@ class MessageAdapter(
     }
 
     inner class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         private val messageTextView: TextView = itemView.findViewById(R.id.messageTextView)
         private val timestampTextView: TextView = itemView.findViewById(R.id.timestampTextView)
         private val profileImageView: ImageView = itemView.findViewById(R.id.profileImageView)
@@ -89,16 +90,21 @@ class MessageAdapter(
 
         fun bindMessage(message: MessageModel) {
             messageTextView.text = message.text
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            val date = dateFormat.parse(message.date)
-            val formattedTimestamp = SimpleDateFormat("HH:mm", Locale.getDefault()).format(date)
-            timestampTextView.text = formattedTimestamp
             userNameTextView.text = message.userName
 
-            val isLastFromUser = layoutPosition == messageList.lastIndex || message.userName != messageList[layoutPosition + 1].userName
+            val inputFormat = SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'S", Locale.ENGLISH)
+            val outputFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val date = inputFormat.parse(message.date)
+            val formattedDate = date?.let { outputFormat.format(it) }
+            timestampTextView.text = formattedDate
+
+            val isLastFromUser = layoutPosition == messageList.size - 1 || message.userName != messageList[layoutPosition + 1].userName
             if (isLastFromUser) {
-                if (message.profilePhoto != null) {
-                    profileImageView.setImageURI(message.profilePhoto)
+                if (!message.profilePhoto.isNullOrEmpty()) {
+                    Glide.with(itemView.context)
+                        .load(message.profilePhoto)
+                        .placeholder(R.drawable.user_profile)
+                        .into(profileImageView)
                 } else {
                     profileImageView.setImageResource(R.drawable.user_profile)
                 }

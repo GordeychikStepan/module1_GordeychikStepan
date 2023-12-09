@@ -1,12 +1,8 @@
 package com.bignerdranch.android.cinemaapp
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bignerdranch.android.cinemaapp.databinding.ActivityMainBinding
 
@@ -20,9 +16,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //checkPermission()
+        // установка селектора для цвета иконок и текста при нажатии
+        binding.navView.itemIconTintList = resources.getColorStateList(R.drawable.bottom_nav_item_color)
+        binding.navView.itemTextColor = resources.getColorStateList(R.drawable.bottom_nav_item_color)
 
-        // переключение м/у экранами навигации
         binding.navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navigation_home -> {
@@ -45,27 +42,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // установка селектора для цвета иконок и текста при нажатии
-        binding.navView.itemIconTintList = resources.getColorStateList(R.drawable.bottom_nav_item_color)
-        binding.navView.itemTextColor = resources.getColorStateList(R.drawable.bottom_nav_item_color)
-
-        switchFragment(NavigationHomeFragment())
-    }
-
-    /*private fun checkPermission() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // Разрешение не предоставлено
-            ActivityCompat.requestPermissions(
-                this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1
-            )
-        } else {
-            // Разрешение уже предоставлено
+        // восстановление состояния
+        savedInstanceState?.let {
+            val selectedItemId = it.getInt("SELECTED_ITEM_ID", R.id.navigation_home)
+            binding.navView.selectedItemId = selectedItemId
+            switchFragment(getFragmentForItemId(selectedItemId))
+        } ?: run {
+            switchFragment(NavigationHomeFragment())
         }
-    }*/
+    }
 
     private fun switchFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
@@ -73,4 +58,18 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
+    private fun getFragmentForItemId(itemId: Int): Fragment {
+        return when (itemId) {
+            R.id.navigation_home -> NavigationHomeFragment()
+            R.id.navigation_collection -> NavigationCollectionsFragment()
+            R.id.navigation_set -> NavigationSetFragment()
+            R.id.navigation_profile -> NavigationProfileScreenFragment()
+            else -> NavigationHomeFragment()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("SELECTED_ITEM_ID", binding.navView.selectedItemId)
+    }
 }

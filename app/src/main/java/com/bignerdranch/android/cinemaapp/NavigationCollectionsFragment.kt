@@ -11,8 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.PopupMenu
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 
 class NavigationCollectionsFragment : Fragment(), CollectionAdapter.OnCollectionClickListener {
 
@@ -22,7 +24,6 @@ class NavigationCollectionsFragment : Fragment(), CollectionAdapter.OnCollection
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        // инициализация SharedPrefsHelper
         sharedPrefsHelper = SharedPrefsHelper(requireContext())
     }
 
@@ -44,6 +45,37 @@ class NavigationCollectionsFragment : Fragment(), CollectionAdapter.OnCollection
         collections.addAll(sharedPrefsHelper.loadCollections())
         collectionAdapter.notifyDataSetChanged()
 
+        val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                return false // Нам не нужна функциональность перемещения
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val deletedCollection = collections[position] // Сохраняем удаляемую коллекцию
+
+                collections.removeAt(position)
+                collectionAdapter.notifyItemRemoved(position)
+
+                Snackbar.make(viewHolder.itemView, "Коллекция удалена", Snackbar.LENGTH_LONG)
+                    .setAction("ОТМЕНИТЬ") {
+                        collections.add(position, deletedCollection)
+                        collectionAdapter.notifyItemInserted(position)
+                    }.addCallback(object : Snackbar.Callback() {
+                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                            super.onDismissed(transientBottomBar, event)
+
+                            if (event != DISMISS_EVENT_ACTION) {
+                                collections.remove(deletedCollection)
+                                collectionAdapter.notifyItemRemoved(position)
+                                sharedPrefsHelper.saveCollections(collections)
+                            }
+                        }
+                    }).show()
+            }
+        })
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+
         val createCollectionButton = view.findViewById<Button>(R.id.createCollectionButton)
         createCollectionButton.setOnClickListener {
             val popupMenu = PopupMenu(requireContext(), createCollectionButton)
@@ -51,7 +83,7 @@ class NavigationCollectionsFragment : Fragment(), CollectionAdapter.OnCollection
             popupMenu.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.menu_add -> {
-                        // запуск активности CreateCollectionScreen для создания новой коллекции
+
                         val intent = Intent(requireContext(), CreateCollectionScreen::class.java)
                         val options = ActivityOptions.makeCustomAnimation(
                             requireContext(),
@@ -70,7 +102,6 @@ class NavigationCollectionsFragment : Fragment(), CollectionAdapter.OnCollection
         return view
     }
 
-    // обработка результата возвращаемого из активности
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == RESULT_OK) {
@@ -85,7 +116,6 @@ class NavigationCollectionsFragment : Fragment(), CollectionAdapter.OnCollection
         }
     }
 
-    // удаление выбранной коллекции
     override fun onDeleteClicked(collection: Collection) {
         collections.remove(collection)
         collectionAdapter.notifyDataSetChanged()

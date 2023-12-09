@@ -18,7 +18,7 @@ import java.util.*
 class NavigationSetFragment : Fragment() {
 
     private val apiKey = "1dc6db90-12c9-4adb-8495-ede762b898a1"
-    private lateinit var movieApiService: MovieApiService
+    private lateinit var apiServiceKinopoisk: ApiServiceKinopoisk
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
@@ -37,19 +37,17 @@ class NavigationSetFragment : Fragment() {
         val titleText = getString(R.string.title_set_for, month, year1)
         titleTextView.text = titleText
 
-        // инициализация Retrofit
         val retrofit = Retrofit.Builder()
             .baseUrl("https://kinopoiskapiunofficial.tech/api/v2.2/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        // создание экземпляра MovieApiService
-        movieApiService = retrofit.create(MovieApiService::class.java)
+        apiServiceKinopoisk = retrofit.create(ApiServiceKinopoisk::class.java)
 
         // запрос на получение кинопремьер на следующий месяц
         val nextMonth = getNextMonth()
         val year = Calendar.getInstance().get(Calendar.YEAR)
-        val call = movieApiService.getPremieres(year, nextMonth, apiKey)
+        val call = apiServiceKinopoisk.getPremieres(year, nextMonth, apiKey)
         call.enqueue(object : Callback<PremieresResponse> {
             override fun onResponse(call: Call<PremieresResponse>, response: Response<PremieresResponse>) {
                 if (response.isSuccessful) {
@@ -79,25 +77,6 @@ class NavigationSetFragment : Fragment() {
 
         val month = SimpleDateFormat("MMMM", Locale.ENGLISH).format(calendar.time)
         return month.toUpperCase(Locale.ENGLISH)
-    }
-
-    private fun handleApiResponse(response: Response<PremieresResponse>) {
-        // проверка, привязан ли фрагмент к контексту
-        if (!isAdded) {
-            return
-        }
-
-        if (response.isSuccessful) {
-            val premieres = response.body()?.items
-
-            if (premieres != null) {
-                recyclerView.adapter = MovieAdapter(premieres)
-            } else {
-                Log.e("PremieresResponse", "Premieres list is null")
-            }
-        } else {
-            Log.e("PremieresResponse", "Unsuccessful response. Code: ${response.code()}")
-        }
     }
 
     private fun handleApiFailure(t: Throwable) {

@@ -5,7 +5,7 @@
 Макет - https://www.figma.com/file/wwDCPGa4AyPXdeuFnKU95M/KOD1.4-Variant2?type=design&node-id=109-39&mode=design&t=0EQJAMzLKUQynN1A-0 
 
 -----
-Реализовано использование API.
+Реализовано использование API. Добавлены тесты.
 
 -----
 Разработка ветки main проекта заняла ~ 25-30 часов.

@@ -59,13 +59,16 @@ class SignUpScreen : AppCompatActivity() {
                 emailEditText.text.toString().isEmpty() || passwordEditText.text.toString().isEmpty() ||
                 rePasswordEditText.text.toString().isEmpty()) {
 
-                Toast.makeText(this, "Заполните все поля для ввода.", Toast.LENGTH_SHORT).show()
+                showErrorDialog("Заполните все поля для регистрации.")
+                //Toast.makeText(this, "Заполните все поля для ввода.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             } else if (passwordEditText.text.toString() != rePasswordEditText.text.toString()){
-                Toast.makeText(this, "Пароли не совпадают.", Toast.LENGTH_SHORT).show()
+                showErrorDialog("Пароли не совпадают.")
+                //Toast.makeText(this, "Пароли не совпадают.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             } else if (!isEmailValid(emailEditText.text.toString())) {
-                Toast.makeText(this, "Невверный ввод почты.", Toast.LENGTH_SHORT).show()
+                showErrorDialog("Невверный ввод почты.")
+                //Toast.makeText(this, "Невверный ввод почты.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 

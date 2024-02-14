@@ -1,19 +1,40 @@
 package com.bignerdranch.android.cinemaapp
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 
 // окно для создания новой коллекции
 class CreateCollectionScreen : AppCompatActivity() {
 
+    @SuppressLint("CutPasteId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.create_collection_screen)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val icons = listOf(
+            R.drawable.ico1, R.drawable.ico2, R.drawable.ico3, R.drawable.ico4,
+            R.drawable.ico5, R.drawable.ico6, R.drawable.ico7, R.drawable.ico8,
+            R.drawable.ico9, R.drawable.ico10, R.drawable.ico11, R.drawable.ico12,
+            R.drawable.ico13, R.drawable.ico14, R.drawable.ico15, R.drawable.ico16,
+            R.drawable.ico17, R.drawable.ico18, R.drawable.ico19, R.drawable.ico20,
+            R.drawable.ico21, R.drawable.ico22, R.drawable.ico23, R.drawable.ico24,
+            R.drawable.ico25, R.drawable.ico26, R.drawable.ico27, R.drawable.ico28,
+            R.drawable.ico29, R.drawable.ico30, R.drawable.ico31, R.drawable.ico32,
+            R.drawable.ico33, R.drawable.ico34, R.drawable.ico35, R.drawable.ico36
+        )
+
+        val randomIcon = icons.random()
+
+        val selectedIconImageView = findViewById<ImageView>(R.id.selectedIconImageView)
+        selectedIconImageView.setImageResource(randomIcon)
+        selectedIconImageView.tag = randomIcon
 
         val backButton = findViewById<ImageView>(R.id.backImage)
         backButton.setOnClickListener {
@@ -31,7 +52,11 @@ class CreateCollectionScreen : AppCompatActivity() {
         createButton.setOnClickListener {
             val collectionName = findViewById<EditText>(R.id.nameEditText).text.toString()
             val selectedIcon = findViewById<ImageView>(R.id.selectedIconImageView).tag as? Int
-            if (collectionName.isNotEmpty()) {
+            if (collectionName.isEmpty()) {
+                Toast.makeText(this, "Пожалуйста, введите название коллекции", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            else {
                 if (selectedIcon != null) {
                     val resultIntent = Intent()
                     resultIntent.putExtra(EXTRA_COLLECTION_NAME, collectionName)
@@ -44,8 +69,6 @@ class CreateCollectionScreen : AppCompatActivity() {
                     resultIntent.putExtra(EXTRA_SELECTED_ICON, R.drawable.ico1)
                     setResult(RESULT_OK, resultIntent)
                 }
-            } else {
-                setResult(RESULT_CANCELED)
             }
             finish()
         }

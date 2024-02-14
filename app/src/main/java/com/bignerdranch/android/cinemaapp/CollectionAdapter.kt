@@ -46,21 +46,6 @@ class CollectionAdapter(private val collections: List<Collection>) :
         fun bind(collection: Collection) {
             nameTextView.text = collection.name
             iconImageView.setImageResource(collection.iconId)
-
-            deleteImageView.setOnClickListener {
-                val popupMenu = PopupMenu(itemView.context, deleteImageView)
-                popupMenu.inflate(R.menu.menu_delete)
-                popupMenu.setOnMenuItemClickListener { item ->
-                    when (item.itemId) {
-                        R.id.menu_del -> {
-                            clickListener?.onDeleteClicked(collection)
-                            true
-                        }
-                        else -> false
-                    }
-                }
-                popupMenu.show()
-            }
         }
     }
 }

@@ -24,4 +24,9 @@ class SharedPrefsHelper(context: Context) {
             emptyList()
         }
     }
+
+    fun clearAll() {
+        sharedPreferences.edit().clear().apply()
+    }
+
 }
